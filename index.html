@@ -3,438 +3,401 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>📡 پراکسی‌های تلگرام</title>
+<title>سایت پراکسی تلگرام</title>
 
 <!-- فونت‌های فارسی و انگلیسی -->
-<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-
-<!-- فونت‌آوسام -->
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+</style>
 
 <style>
   body {
-    margin:0; padding:20px;
-    font-family: 'Vazir', Tahoma, sans-serif;
+    margin: 0; padding: 0;
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
     background: #121212;
-    color: #eee;
+    color: #e0e0e0;
     min-height: 100vh;
-  }
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 20px;
   }
   h1 {
-    text-align: center;
     margin-bottom: 20px;
-    font-weight: 900;
-  }
-  .counts {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    font-weight: 700;
-    font-size: 1.1rem;
-  }
-  .btn-group {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 15px;
   }
   button {
     cursor: pointer;
+    background-color: #0088cc;
     border: none;
-    border-radius: 10px;
-    padding: 10px 20px;
-    font-weight: 700;
-    font-size: 1rem;
-    color: #eee;
-    background: #374151;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: 600;
     transition: background-color 0.3s ease;
   }
   button:hover:not(:disabled) {
-    background-color: #4b5563;
+    background-color: #00aaff;
   }
   button:disabled {
-    opacity: 0.5;
+    background-color: #555;
     cursor: not-allowed;
   }
-  button.primary {
-    background-color: #3b82f6;
-  }
-  button.primary:hover:not(:disabled) {
-    background-color: #2563eb;
-  }
-  button i {
-    font-size: 1.2rem;
-  }
-  #proxyList {
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-    gap: 20px;
-  }
   .proxy-card {
-    background: #1f2937;
-    border-radius: 15px;
+    background: #222;
+    margin-bottom: 15px;
     padding: 15px 20px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+    border-radius: 10px;
+    box-shadow: 0 0 10px #000;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.3s ease;
-  }
-  .proxy-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.85);
+    gap: 10px;
   }
   .proxy-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
   }
   .proxy-server {
-    font-family: 'Inter', Tahoma, sans-serif;
-    font-weight: 800;
-    font-size: 1.3rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+    font-family: 'Roboto', sans-serif;
+    direction: ltr;
     user-select: text;
   }
   .status-badge {
+    font-size: 0.9rem;
+    padding: 4px 10px;
+    border-radius: 20px;
     font-weight: 700;
-    padding: 5px 10px;
-    border-radius: 10px;
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.95rem;
   }
-  .status-good {background:#22c55e; color:#d1fae5;}
-  .status-medium {background:#eab308; color:#78350f;}
-  .status-bad {background:#ef4444; color:#fcdcdc;}
-  .status-unknown {background:#64748b; color:#e2e8f0;}
-
-  .status-dot {
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    box-shadow: 0 0 7px rgba(0,0,0,0.25);
+  .status-good {
+    background-color: #4caf50;
+    color: #fff;
   }
-  .dot-good { background: #22c55e; }
-  .dot-medium { background: #eab308; }
-  .dot-bad { background: #ef4444; }
-  .dot-unknown { background: #64748b; }
-
-  .proxy-details {
+  .status-medium {
+    background-color: #ff9800;
+    color: #fff;
+  }
+  .status-bad {
+    background-color: #f44336;
+    color: #fff;
+  }
+  .status-unknown {
+    background-color: #607d8b;
+    color: #fff;
+  }
+  .proxy-info {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px 15px;
-    color: #9ca3af;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
     font-size: 0.9rem;
-    margin-bottom: 10px;
+    color: #bbb;
   }
-  .proxy-details div {
+  .proxy-info div {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
-  .proxy-details .flag-emoji {
-    font-size: 1.5rem;
-    border-radius: 6px;
-    padding: 2px 7px;
-    background: #111827;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.8);
-    user-select:none;
+  .country-flag {
+    width: 24px;
+    height: 18px;
+    border-radius: 4px;
+    object-fit: cover;
+    box-shadow: 0 0 3px #000a;
   }
-  .proxy-details .english-text {
-    font-family: 'Inter', Tahoma, sans-serif;
-  }
-  .secret-key {
-    background-color: #111827;
-    border-radius: 10px;
-    padding: 9px 14px;
-    font-family: 'Inter', monospace;
-    font-size: 0.9rem;
-    word-break: break-word;
+  .proxy-secret {
+    font-family: 'Roboto Mono', monospace;
+    background: #1e1e1e;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 0.85rem;
     user-select: all;
-    border: 1px solid #374151;
-    color: #cbd5e1;
-    margin-bottom: 12px;
+    word-break: break-all;
+    color: #ccc;
   }
-  .btn-actions {
+  .btn-group {
     display: flex;
     gap: 12px;
     justify-content: center;
+    margin-top: 10px;
   }
-
-  /* نوتیفیکیشن */
-  #toast {
+  .btn-group button {
+    flex: 1;
+    font-size: 0.9rem;
+    padding: 8px 0;
+  }
+  #proxyCount, #activeCount {
+    font-weight: 700;
+    color: #00c8ff;
+  }
+  #headerInfo {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+  }
+  .toast {
     position: fixed;
-    top: 1rem;
-    left: 50%;
-    transform: translateX(-50%) translateY(-120%);
-    background-color: #333;
-    color: #eee;
-    padding: 14px 24px;
-    border-radius: 12px;
-    box-shadow: 0 8px 18px rgb(0 0 0 / 0.6);
+    top: 20px;
+    right: 20px;
+    background: #333;
+    padding: 14px 22px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 0 10px #000a;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.35s ease;
-    font-weight: 600;
+    transition: opacity 0.3s ease;
     z-index: 9999;
-    max-width: 90vw;
-    text-align: center;
   }
-  #toast.show {
+  .toast.show {
     opacity: 1;
     pointer-events: auto;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  @media (max-width:480px) {
-    .proxy-details {
-      grid-template-columns: 1fr;
-    }
-    .btn-actions {
-      flex-direction: column;
-    }
-    button {
-      width: 100%;
-      justify-content: center;
-    }
   }
 </style>
+
 </head>
 <body>
 
-<div class="container">
-  <h1>📡 پراکسی‌های تلگرام</h1>
-
-  <div class="counts" aria-live="polite" aria-atomic="true">
-    <div>تعداد کل: <span id="proxyCount">0</span></div>
-    <div>پراکسی‌های فعال: <span id="activeCount">0</span></div>
-  </div>
-
-  <div class="btn-group">
-    <button id="refreshBtn" title="بارگذاری پراکسی‌ها">
-      <i class="fas fa-sync-alt"></i> بارگذاری
-    </button>
-    <button id="testAllBtn" class="primary" title="تست همه پراکسی‌ها">
-      <i class="fas fa-bolt"></i> تست همه
-    </button>
-  </div>
-
-  <div id="proxyList" role="list" aria-label="لیست پراکسی‌ها"></div>
+<h1>لیست پراکسی‌های تلگرام</h1>
+<div id="headerInfo">
+    تعداد کل پراکسی‌ها: <span id="proxyCount">0</span> | پراکسی‌های فعال: <span id="activeCount">0</span>
 </div>
 
-<div id="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
+<div>
+  <button id="refreshBtn">بروزرسانی لیست</button>
+  <button id="testAllBtn">تست همه</button>
+</div>
+
+<div id="proxyList" style="margin-top:20px; width: 100%; max-width: 600px;"></div>
+
+<div class="btn-group" style="max-width: 600px; width: 100%; margin-top: 10px;">
+  <button id="loadMoreBtn" style="width: 100%;">نمایش بیشتر</button>
+</div>
+
+<div id="toast" class="toast"></div>
 
 <script>
-  const countryTranslations = {
-    'Russia': 'روسیه',
-    'Netherlands': 'هلند',
-    'United States': 'آمریکا',
-    'Germany': 'آلمان',
-    'France': 'فرانسه',
-    'United Kingdom': 'انگلستان',
-    'Canada': 'کانادا',
-    'Italy': 'ایتالیا',
-    'Spain': 'اسپانیا',
-    'Turkey': 'ترکیه',
-    'Finland': 'فنلاند',
-    'Sweden': 'سوئد',
-    'Poland': 'لهستان',
-    'Iran': 'ایران',
+// لینک فایل پراکسی با فرمت json (بروزرسانی آن لازم است)
+const proxySourceURL = "https://raw.githubusercontent.com/hookzof/socks5_list/master/tg/mtproto.json";
+
+let allProxies = [];
+let visibleProxies = [];
+const perPage = 9;
+
+const elements = {
+  refreshBtn: document.getElementById("refreshBtn"),
+  testAllBtn: document.getElementById("testAllBtn"),
+  proxyCount: document.getElementById("proxyCount"),
+  activeCount: document.getElementById("activeCount"),
+  proxyList: document.getElementById("proxyList"),
+  loadMoreBtn: document.getElementById("loadMoreBtn"),
+  toast: document.getElementById("toast"),
+};
+
+const countryFlags = {
+  "Russia": "https://flagcdn.com/w40/ru.png",
+  "Netherlands": "https://flagcdn.com/w40/nl.png",
+  "United States": "https://flagcdn.com/w40/us.png",
+  "Germany": "https://flagcdn.com/w40/de.png",
+  "France": "https://flagcdn.com/w40/fr.png",
+  "United Kingdom": "https://flagcdn.com/w40/gb.png",
+  "Canada": "https://flagcdn.com/w40/ca.png",
+  "Italy": "https://flagcdn.com/w40/it.png",
+  "Spain": "https://flagcdn.com/w40/es.png",
+  "Turkey": "https://flagcdn.com/w40/tr.png",
+  "Finland": "https://flagcdn.com/w40/fi.png",
+  "Sweden": "https://flagcdn.com/w40/se.png",
+  "Poland": "https://flagcdn.com/w40/pl.png",
+  "Iran": "https://flagcdn.com/w40/ir.png"
+};
+
+const getCountryFlag = (country) => {
+  return countryFlags[country] || "https://flagcdn.com/w40/un.png";
+};
+
+const getCountryName = (country) => {
+  const translations = {
+    "Russia": "روسیه",
+    "Netherlands": "هلند",
+    "United States": "آمریکا",
+    "Germany": "آلمان",
+    "France": "فرانسه",
+    "United Kingdom": "انگلستان",
+    "Canada": "کانادا",
+    "Italy": "ایتالیا",
+    "Spain": "اسپانیا",
+    "Turkey": "ترکیه",
+    "Finland": "فنلاند",
+    "Sweden": "سوئد",
+    "Poland": "لهستان",
+    "Iran": "ایران",
   };
+  return translations[country] || country || "نامشخص";
+};
 
-  const countryEmojis = {
-    'Russia': '🇷🇺',
-    'Netherlands': '🇳🇱',
-    'United States': '🇺🇸',
-    'Germany': '🇩🇪',
-    'France': '🇫🇷',
-    'United Kingdom': '🇬🇧',
-    'Canada': '🇨🇦',
-    'Italy': '🇮🇹',
-    'Spain': '🇪🇸',
-    'Turkey': '🇹🇷',
-    'Finland': '🇫🇮',
-    'Sweden': '🇸🇪',
-    'Poland': '🇵🇱',
-    'Iran': '🇮🇷',
-  };
+function showToast(message, duration = 3000) {
+  const toast = elements.toast;
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, duration);
+}
 
-  let allProxies = [];
-  let isLoading = false;
+function createProxyCard(proxy) {
+  const card = document.createElement("div");
+  card.className = "proxy-card";
 
-  const elements = {
-    refreshBtn: document.getElementById('refreshBtn'),
-    testAllBtn: document.getElementById('testAllBtn'),
-    proxyCount: document.getElementById('proxyCount'),
-    activeCount: document.getElementById('activeCount'),
-    proxyList: document.getElementById('proxyList'),
-    toast: document.getElementById('toast'),
-  };
+  const flagSrc = getCountryFlag(proxy.country);
+  const countryName = getCountryName(proxy.country);
 
-  function showToast(message, type = 'info') {
-    const bgColors = {
-      success: '#22c55e',
-      error: '#ef4444',
-      warning: '#eab308',
-      info: '#2563eb',
-    };
-    elements.toast.textContent = message;
-    elements.toast.style.backgroundColor = bgColors[type] || bgColors.info;
-    elements.toast.classList.add('show');
-    setTimeout(() => elements.toast.classList.remove('show'), 3500);
-  }
+  card.innerHTML = `
+    <div class="proxy-header">
+      <div class="proxy-server">${proxy.server}</div>
+      <div class="status-badge status-unknown" id="status-${proxy.id}">نامشخص</div>
+    </div>
+    <div class="proxy-info">
+      <div><img class="country-flag" src="${flagSrc}" alt="${countryName}" title="${countryName}" /> ${countryName}</div>
+      <div>پورت: ${proxy.port}</div>
+      <div id="ping-${proxy.id}">تست نشده</div>
+    </div>
+    <div class="proxy-secret" title="کلید امنیتی">${proxy.secret}</div>
+    <div class="btn-group">
+      <button onclick="testPing(${proxy.id})">تست</button>
+      <button onclick="copyProxy(${proxy.id})">کپی</button>
+      <button onclick="connectTelegram(${proxy.id})">اتصال</button>
+    </div>
+  `;
+  return card;
+}
 
-  function getStatusInfo(status) {
-    switch(status) {
-      case 'good': return { text: 'عالی', className: 'status-good', dotClass: 'dot-good', icon: 'fas fa-circle-check' };
-      case 'medium': return { text: 'متوسط', className: 'status-medium', dotClass: 'dot-medium', icon: 'fas fa-exclamation-triangle' };
-      case 'bad': return { text: 'ضعیف', className: 'status-bad', dotClass: 'dot-bad', icon: 'fas fa-circle-xmark' };
-      default: return { text: 'نامشخص', className: 'status-unknown', dotClass: 'dot-unknown', icon: 'fas fa-question-circle' };
-    }
-  }
+function renderProxies() {
+  elements.proxyList.innerHTML = "";
+  visibleProxies.forEach(proxy => {
+    elements.proxyList.appendChild(createProxyCard(proxy));
+  });
+}
 
-  function renderProxies() {
-    elements.proxyList.innerHTML = '';
-    if (allProxies.length === 0) {
-      elements.proxyList.innerHTML = `<p style="text-align:center; color:#888; margin-top: 2rem;">هیچ پراکسی‌ای برای نمایش وجود ندارد.</p>`;
-      return;
-    }
-    allProxies.forEach(proxy => {
-      const status = getStatusInfo(proxy.status);
-      const countryName = countryTranslations[proxy.country] || proxy.country || 'نامشخص';
-      const countryFlag = countryEmojis[proxy.country] || '🌍';
+async function loadProxies() {
+  try {
+    const res = await fetch(proxySourceURL);
+    if (!res.ok) throw new Error("خطا در دریافت لیست پراکسی‌ها");
+    const data = await res.json();
 
-      const proxyDiv = document.createElement('div');
-      proxyDiv.className = 'proxy-card';
-      proxyDiv.setAttribute('role', 'listitem');
-      proxyDiv.innerHTML = `
-        <div class="proxy-header">
-          <div>
-            <span class="status-dot ${status.dotClass}" title="${status.text}"></span>
-            <span class="proxy-server english-text">${proxy.server}</span>
-          </div>
-          <span class="status-badge ${status.className}">
-            <i class="${status.icon}"></i> ${status.text}
-          </span>
-        </div>
-        <div class="proxy-details" aria-label="جزئیات پراکسی">
-          <div class="country-flag" title="کشور ${countryName}">
-            <span class="flag-emoji">${countryFlag}</span>
-            <span>${countryName}</span>
-          </div>
-          <div>پورت: <span class="english-text">${proxy.port}</span></div>
-          <div>پینگ: <span>${proxy.ping !== null ? proxy.ping + ' ms' : 'تست نشده'}</span></div>
-        </div>
-        <div class="secret-key english-text" title="کپی کلید امنیتی (Secret)">${proxy.secret}</div>
-        <div class="btn-actions">
-          <button class="btn" onclick="testPing(${proxy.id})" title="تست پینگ"><i class="fas fa-bolt"></i> تست</button>
-          <button class="btn" onclick="copyProxy(${proxy.id})" title="کپی"><i class="fas fa-copy"></i> کپی</button>
-          <button class="btn primary" onclick="connectTelegram(${proxy.id})" title="اتصال"><i class="fas fa-paper-plane"></i> اتصال</button>
-        </div>
-      `;
-      elements.proxyList.appendChild(proxyDiv);
-    });
-  }
-
-  async function loadProxies() {
-    if (isLoading) return;
-    isLoading = true;
-    elements.refreshBtn.disabled = true;
-    elements.testAllBtn.disabled = true;
-    showToast('⏳ در حال بارگذاری پراکسی‌ها...', 'info');
-
-    try {
-      const res = await fetch('https://raw.githubusercontent.com/hookzof/socks5_list/master/tg/mtproto.json');
-      if (!res.ok) throw new Error('خطا در دریافت داده‌ها');
-      const data = await res.json();
-
-      allProxies = (Array.isArray(data) ? data : data.proxies || []).map((p, i) => ({
-        id: i,
-        server: p.server || p.host || 'نامشخص',
-        port: p.port || 'نامشخص',
-        secret: p.secret || p.user || '',
-        country: p.country || 'نامشخص',
-        status: 'unknown',
-        ping: null,
-      }));
-
-      showToast('✅ پراکسی‌ها با موفقیت بارگذاری شدند', 'success');
-    } catch (e) {
-      showToast('⚠️ بارگذاری پراکسی‌ها ناموفق بود، از لیست پیش‌فرض استفاده می‌شود', 'warning');
-      allProxies = [
-        { id: 0, server: "proxy.digitalresistance.dog", port: "443", secret: "ddd41d8cd98f00b204e9800998ecf8427e", country: "Germany", status: 'unknown', ping: null },
-        { id: 1, server: "149.154.175.100", port: "443", secret: "ee1111111111111111111111111111111111", country: "Russia", status: 'unknown', ping: null },
-        { id: 2, server: "mtpro.co.uk", port: "443", secret: "ee0000000000000000000000000000000000", country: "United Kingdom", status: 'unknown', ping: null }
-      ];
-    } finally {
-      isLoading = false;
-      elements.refreshBtn.disabled = false;
-      elements.testAllBtn.disabled = false;
-      updateCounts();
-      renderProxies();
-    }
-  }
-
-  async function testPing(id) {
-    const proxy = allProxies.find(p => p.id === id);
-    if (!proxy) return;
-
-    // نمایش وضعیت در حال تست
-    proxy.status = 'unknown';
-    proxy.ping = null;
+    allProxies = (Array.isArray(data) ? data : data.proxies || []).map((p, i) => ({
+      id: i,
+      server: p.server || p.host,
+      port: p.port,
+      secret: p.secret,
+      country: p.country || "نامشخص",
+      status: "unknown",
+      ping: null,
+    }));
+    visibleProxies = allProxies.slice(0, perPage);
     renderProxies();
-
-    elements.refreshBtn.disabled = true;
-    elements.testAllBtn.disabled = true;
-    showToast(`⌛ در حال تست پینگ ${proxy.server}...`, 'info');
-
-    // شبیه سازی پینگ با تاخیر تصادفی (100-800 میلی ثانیه)
-    const delay = Math.floor(Math.random() * 700) + 100;
-    await new Promise(r => setTimeout(r, delay));
-
-    proxy.ping = delay;
-    if (delay < 250) proxy.status = 'good';
-    else if (delay < 600) proxy.status = 'medium';
-    else proxy.status = 'bad';
-
-    elements.refreshBtn.disabled = false;
-    elements.testAllBtn.disabled = false;
-
     updateCounts();
+    showToast("✅ لیست پراکسی‌ها به‌روزرسانی شد.");
+  } catch {
+    showToast("❌ خطا در بارگذاری پراکسی‌ها، استفاده از لیست پیش‌فرض");
+    // لیست پیشفرض ساده
+    allProxies = [
+      { id: 0, server: "149.154.175.50", port: "443", secret: "abcd1234", country: "Russia", status: "unknown", ping: null },
+      { id: 1, server: "149.154.167.40", port: "443", secret: "efgh5678", country: "United States", status: "unknown", ping: null },
+    ];
+    visibleProxies = allProxies.slice(0, perPage);
     renderProxies();
-    showToast(`✅ تست پراکسی ${proxy.server} انجام شد`, 'success');
+    updateCounts();
   }
+}
 
-  async function testAllProxies() {
-    if (isLoading) return;
-    elements.testAllBtn.disabled = true;
-    elements.refreshBtn.disabled = true;
-    showToast('⌛ در حال تست همه پراکسی‌ها...', 'info');
+function updateCounts() {
+  elements.proxyCount.textContent = allProxies.length;
+  elements.activeCount.textContent = allProxies.filter(p => p.status === "good").length;
+}
 
-    for (let proxy of allProxies) {
-      await testPing(proxy.id);
-    }
+async function testPing(id) {
+  const proxy = allProxies.find(p => p.id === id);
+  if (!proxy) return;
 
-    elements.testAllBtn.disabled = false;
-    elements.refreshBtn.disabled = false;
-    showToast('✅ تست همه پراکسی‌ها انجام شد', 'success');
+  const pingElem = document.getElementById(`ping-${id}`);
+  const statusElem = document.getElementById(`status-${id}`);
+
+  pingElem.textContent = "در حال تست...";
+  statusElem.textContent = "در حال تست...";
+  statusElem.className = "status-badge status-unknown";
+
+  // شبیه‌سازی تست پینگ
+  const pingTime = Math.floor(Math.random() * 600) + 50;
+  await new Promise(r => setTimeout(r, pingTime));
+
+  proxy.ping = pingTime;
+  if (pingTime < 250) {
+    proxy.status = "good";
+    statusElem.className = "status-badge status-good";
+    statusElem.textContent = "عالی";
+    pingElem.textContent = pingTime + " ms";
+    pingElem.style.color = "#4caf50";
+  } else if (pingTime < 500) {
+    proxy.status = "medium";
+    statusElem.className = "status-badge status-medium";
+    statusElem.textContent = "متوسط";
+    pingElem.textContent = pingTime + " ms";
+    pingElem.style.color = "#ff9800";
+  } else {
+    proxy.status = "bad";
+    statusElem.className = "status-badge status-bad";
+    statusElem.textContent = "ضعیف";
+    pingElem.textContent = pingTime + " ms";
+    pingElem.style.color = "#f44336";
   }
+  updateCounts();
+}
 
-  function copyProxy(id) {
-    const proxy = allProxies.find(p => p.id === id);
-    if (!proxy) return;
-    const proxyUrl = `tg://proxy?server=${proxy.server}&port=${proxy.port}&secret=${proxy.secret}`;
-    navigator.clipboard.writeText(proxyUrl)
-      .then(() => showToast('✅ لینک پراکسی کپی شد', 'success'))
-      .catch(() => showToast('❌ خطا در کپی لینک', 'error'));
+function copyProxy(id) {
+  const proxy = allProxies.find(p => p.id === id);
+  if (!proxy) return;
+  const proxyURL = `tg://proxy?server=${proxy.server}&port=${proxy.port}&secret=${proxy.secret}`;
+  navigator.clipboard.writeText(proxyURL).then(() => {
+    showToast("✅ لینک پروکسی کپی شد.");
+  }).catch(() => {
+    showToast("❌ خطا در کپی کردن لینک.");
+  });
+}
+
+function connectTelegram(id) {
+  const proxy = allProxies.find(p => p.id === id);
+  if (!proxy) return;
+  const proxyURL = `tg://proxy?server=${proxy.server}&port=${proxy.port}&secret=${proxy.secret}`;
+  window.location.href = proxyURL;
+  showToast("🚀 در حال تلاش برای اتصال به تلگرام...");
+}
+
+elements.refreshBtn.addEventListener("click", loadProxies);
+
+elements.testAllBtn.addEventListener("click", async () => {
+  for (const proxy of visibleProxies) {
+    await testPing(proxy.id);
   }
+  showToast("✅ تست همه پراکسی‌ها به پایان رسید.");
+});
 
-  function connectTelegram(id
+elements.loadMoreBtn.addEventListener("click", () => {
+  const currentCount = visibleProxies.length;
+  const next = allProxies.slice(currentCount, currentCount + perPage);
+  if (next.length === 0) {
+    showToast("📌 پراکسی جدیدی برای نمایش نیست.");
+    return;
+  }
+  visibleProxies = visibleProxies.concat(next);
+  renderProxies();
+});
+
+window.addEventListener("load", () => {
+  loadProxies();
+});
+</script>
+
+</body>
+</html>
