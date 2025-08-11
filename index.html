@@ -3,474 +3,231 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>لیست پراکسی‌های تلگرام</title>
+<title>لیست پراکسی تلگرام</title>
+<link
+  href="https://fonts.googleapis.com/css2?family=Vazir&family=Inter:wght@400;600&display=swap"
+  rel="stylesheet"
+/>
 <style>
-    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
-    body {
-        font-family: "Vazir", sans-serif, Tahoma, Arial;
-        background: #f0f2f5;
-        margin: 0;
-        padding: 0;
-        transition: background-color 0.3s ease;
-        color: #222;
-    }
-    .dark-mode {
-        background: #121212;
-        color: #eee;
-    }
-    header {
-        background: #0052cc;
-        color: white;
-        padding: 1rem 1.5rem;
-        text-align: center;
-        font-size: 1.4rem;
-        font-weight: bold;
-        box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-    .container {
-        max-width: 980px;
-        margin: 1rem auto 3rem;
-        padding: 0 1rem;
-    }
-    .toolbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 1rem;
-    }
-    .toolbar > * {
-        flex: 1 1 auto;
-        min-width: 120px;
-    }
-    input[type="text"] {
-        padding: 8px 12px;
-        font-size: 1rem;
-        border-radius: 8px;
-        border: 1px solid #aaa;
-        transition: border-color 0.3s ease;
-    }
-    input[type="text"]:focus {
-        outline: none;
-        border-color: #0052cc;
-        box-shadow: 0 0 6px #0052ccaa;
-    }
-    button {
-        background: #0052cc;
-        color: white;
-        border: none;
-        padding: 10px 16px;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.25s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    button:disabled {
-        background: #888;
-        cursor: not-allowed;
-    }
-    button:hover:not(:disabled) {
-        background: #003a99;
-    }
-    .proxy-counts {
-        margin-bottom: 1rem;
-        display: flex;
-        gap: 12px;
-        font-weight: 700;
-        font-size: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    .count-badge {
-        padding: 6px 14px;
-        border-radius: 20px;
-        color: white;
-        min-width: 90px;
-        text-align: center;
-        box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
-        user-select: none;
-    }
-    .count-all {
-        background: #666;
-    }
-    .count-good {
-        background: #28a745;
-    }
-    .count-medium {
-        background: #ffc107;
-        color: #222;
-    }
-    .count-bad {
-        background: #dc3545;
-    }
+  /* فونت‌ها */
+  body {
+    font-family: 'Vazir', Tahoma, Arial, sans-serif;
+    background-color: #121212;
+    color: #eee;
+    margin: 0;
+    padding: 1rem;
+  }
+  .english-text {
+    font-family: 'Inter', 'Roboto', Tahoma, Arial, sans-serif;
+  }
 
-    /* Proxy cards */
-    .proxy-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-        gap: 1rem;
-    }
-    .proxy-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
-        padding: 16px;
-        color: #222;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        transition: transform 0.2s ease, box-shadow 0.25s ease;
-        cursor: default;
-    }
-    .dark-mode .proxy-card {
-        background: #1e1e1e;
-        color: #eee;
-        box-shadow: 0 3px 10px rgb(255 255 255 / 0.05);
-    }
-    .proxy-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgb(0 0 0 / 0.15);
-    }
-    .proxy-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-    .proxy-server {
-        font-weight: 700;
-        font-size: 1.1rem;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .status-badge {
-        border-radius: 14px;
-        padding: 4px 10px;
-        font-weight: 700;
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        user-select: none;
-        width: fit-content;
-    }
-    .status-good {
-        background-color: #d4edda;
-        color: #155724;
-    }
-    .status-medium {
-        background-color: #fff3cd;
-        color: #856404;
-    }
-    .status-bad {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
-    .status-unknown {
-        background-color: #e2e3e5;
-        color: #6c757d;
-    }
-    .proxy-info {
-        font-size: 0.9rem;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        color: #555;
-    }
-    .proxy-info div {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .proxy-info i {
-        min-width: 18px;
-        text-align: center;
-    }
-    .secret-box {
-        background: #f9f9f9;
-        border-radius: 8px;
-        font-family: monospace;
-        font-size: 0.85rem;
-        padding: 8px 12px;
-        word-break: break-all;
-        margin-bottom: 12px;
-        color: #333;
-    }
-    .dark-mode .secret-box {
-        background: #2b2b2b;
-        color: #ccc;
-    }
-    .proxy-actions {
-        display: flex;
-        gap: 8px;
-    }
-    .proxy-actions button {
-        flex: 1;
-        font-size: 0.9rem;
-        padding: 8px;
-    }
-    .loading-spinner {
-        border: 3px solid #ccc;
-        border-top: 3px solid #0052cc;
-        border-radius: 50%;
-        width: 16px;
-        height: 16px;
-        animation: spin 1s linear infinite;
-        display: inline-block;
-    }
-    @keyframes spin {
-        0% {transform: rotate(0deg);}
-        100% {transform: rotate(360deg);}
-    }
+  /* کانتینر */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
 
-    /* Toast notifications */
-    .toast {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #222;
-        color: white;
-        padding: 12px 20px;
-        border-radius: 12px;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease, transform 0.3s ease;
-        font-weight: 600;
-        user-select: none;
-        z-index: 110;
-    }
-    .toast.show {
-        opacity: 1;
-        pointer-events: auto;
-        transform: translateY(0);
-    }
-    .toast.success {
-        background-color: #28a745;
-    }
-    .toast.error {
-        background-color: #dc3545;
-    }
-    .toast.warning {
-        background-color: #ffc107;
-        color: #222;
-    }
-    .toast.info {
-        background-color: #007bff;
-    }
+  /* پرچم با استایل */
+  .country-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .country-flag .flag-emoji {
+    font-size: 1.5rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+    padding: 2px 6px;
+    background: #222;
+    line-height: 1;
+  }
 
-    /* Filter and toggle dark mode */
-    .filters {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin-bottom: 1rem;
-        justify-content: center;
-    }
-    .filters select, .filters input[type=text] {
-        padding: 8px 10px;
-        font-size: 1rem;
-        border-radius: 8px;
-        border: 1px solid #aaa;
-        min-width: 140px;
-        transition: border-color 0.3s ease;
-    }
-    .filters select:focus, .filters input[type=text]:focus {
-        outline: none;
-        border-color: #0052cc;
-        box-shadow: 0 0 6px #0052ccaa;
-    }
-    .dark-toggle {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        user-select: none;
-        font-weight: 700;
-        font-size: 0.9rem;
-        color: #0052cc;
-    }
-    .dark-toggle input {
-        cursor: pointer;
-        width: 20px;
-        height: 20px;
-    }
+  /* کارت پراکسی */
+  .proxy-card {
+    background: #1f2937;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+  }
+  .proxy-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+  }
 
-    /* Responsive */
-    @media (max-width: 480px) {
-        .proxy-info {
-            flex-direction: column;
-            gap: 6px;
-        }
-        .toolbar {
-            flex-direction: column;
-            gap: 12px;
-        }
-        button {
-            width: 100%;
-        }
-        .proxy-actions {
-            flex-direction: column;
-        }
-    }
+  .status-badge {
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .status-good {
+    background-color: #22c55e; /* سبز */
+    color: #f0fdfa;
+  }
+  .status-medium {
+    background-color: #eab308; /* زرد */
+    color: #1c1917;
+  }
+  .status-bad {
+    background-color: #ef4444; /* قرمز */
+    color: #fdf2f2;
+  }
+  .status-unknown {
+    background-color: #64748b; /* خاکستری */
+    color: #f1f5f9;
+  }
 
+  /* دکمه‌ها */
+  .btn {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    padding: 0.4rem 1rem;
+    font-weight: 600;
+    background-color: #374151;
+    color: #eee;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.3s ease;
+  }
+  .btn:hover:not(:disabled) {
+    background-color: #4b5563;
+  }
+  .btn-primary {
+    background-color: #2563eb;
+    color: white;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: #1e40af;
+  }
+  .btn:disabled {
+    background-color: #6b7280;
+    cursor: not-allowed;
+  }
+
+  /* آیکون‌ها */
+  .btn-icon {
+    font-size: 1.1rem;
+  }
+
+  /* لیست پراکسی */
+  #proxyList {
+    margin-top: 1rem;
+  }
+
+  /* متن کلید (secret) */
+  .secret-key {
+    font-family: 'Inter', monospace;
+    background-color: #111827;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #374151;
+    word-break: break-word;
+    user-select: all;
+  }
+
+  /* سایه نقاط وضعیت */
+  .status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot-good {
+    background-color: #22c55e;
+    box-shadow: 0 0 6px #22c55e99;
+  }
+  .dot-medium {
+    background-color: #eab308;
+    box-shadow: 0 0 6px #eab30899;
+  }
+  .dot-bad {
+    background-color: #ef4444;
+    box-shadow: 0 0 6px #ef444499;
+  }
+  .dot-unknown {
+    background-color: #64748b;
+    box-shadow: 0 0 6px #64748b99;
+  }
 </style>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
-
-<header>📡 پراکسی‌های تلگرام - لیست به روز</header>
-
-<div class="container">
-
-    <div class="toolbar">
-        <input type="text" id="searchInput" placeholder="جستجو بر اساس سرور یا کشور..." />
-        <select id="filterCountry">
-            <option value="">همه کشورها</option>
-        </select>
-        <button id="refreshBtn"><i class="fa-solid fa-arrows-rotate"></i> بارگذاری</button>
-        <button id="testAllBtn"><i class="fa-solid fa-bolt-lightning"></i> تست همه</button>
-        <label class="dark-toggle" title="حالت تاریک">
-            <input type="checkbox" id="darkModeToggle" />
-            <span>حالت تاریک</span>
-        </label>
-    </div>
-
-    <div class="proxy-counts">
-        <div class="count-badge count-all">تعداد کل: <span id="proxyCount">0</span></div>
-        <div class="count-badge count-good">عالی: <span id="activeCount">0</span></div>
-        <div class="count-badge count-medium">متوسط: <span id="mediumCount">0</span></div>
-        <div class="count-badge count-bad">ضعیف: <span id="badCount">0</span></div>
-    </div>
-
-    <div class="proxy-list" id="proxyList"></div>
-
-    <div style="text-align:center; margin-top: 20px;">
-        <button id="loadMoreBtn" style="display:none;">بارگذاری بیشتر</button>
-    </div>
-
-    <div style="margin-top: 2rem; font-size: 0.9rem; color: #555; text-align:center;">
-        <p>برای استفاده از پراکسی‌های MTProto، روی دکمه اتصال کلیک کنید تا تلگرام شما به صورت خودکار به پراکسی متصل شود.</p>
-        <p>در صورت نیاز، می‌توانید لینک پراکسی را کپی و به صورت دستی استفاده کنید.</p>
-    </div>
-
-</div>
-
-<!-- Toast notifications container -->
-<div id="toastContainer"></div>
+  <div class="container">
+    <h1>📡 لیست پراکسی‌های تلگرام</h1>
+    <div id="proxyList"></div>
+  </div>
 
 <script>
-(() => {
-    'use strict';
+  const countryTranslations = {
+    'Russia': '🇷🇺 Russia',
+    'Netherlands': '🇳🇱 Netherlands',
+    'United States': '🇺🇸 United States',
+    'Germany': '🇩🇪 Germany',
+    'France': '🇫🇷 France',
+    'United Kingdom': '🇬🇧 United Kingdom',
+    'Canada': '🇨🇦 Canada',
+    'Italy': '🇮🇹 Italy',
+    'Spain': '🇪🇸 Spain',
+    'Turkey': '🇹🇷 Turkey',
+    'Finland': '🇫🇮 Finland',
+    'Sweden': '🇸🇪 Sweden',
+    'Poland': '🇵🇱 Poland',
+    'Iran': '🇮🇷 Iran'
+  };
 
-    // ترجمه کشورها با پرچم
-    const countryTranslations = {
-        'Russia': '🇷🇺 روسیه', 'Netherlands': '🇳🇱 هلند', 'United States': '🇺🇸 آمریکا',
-        'Germany': '🇩🇪 آلمان', 'France': '🇫🇷 فرانسه', 'United Kingdom': '🇬🇧 انگلستان',
-        'Canada': '🇨🇦 کانادا', 'Italy': '🇮🇹 ایتالیا', 'Spain': '🇪🇸 اسپانیا', 'Turkey': '🇹🇷 ترکیه',
-        'Finland': '🇫🇮 فنلاند', 'Sweden': '🇸🇪 سوئد', 'Poland': '🇵🇱 لهستان', 'Iran': '🇮🇷 ایران'
-    };
-    const getCountryName = (country) => countryTranslations[country] || `🌍 ${country || 'نامشخص'}`;
+  const getCountryName = (country) => countryTranslations[country] || `🌍 ${country || 'Unknown'}`;
 
-    let allProxies = [];
-    let visibleProxies = [];
-    const perPage = 9;
-    let currentFilterCountry = '';
-    let searchTerm = '';
+  // داده نمونه پراکسی‌ها
+  const proxies = [
+    { id: 1, server: "proxy.digitalresistance.dog", port: "443", secret: "ddd41d8cd98f00b204e9800998ecf8427e", country: "Germany", status: "good", ping: 120 },
+    { id: 2, server: "149.154.175.100", port: "443", secret: "ee1111111111111111111111111111111111", country: "Russia", status: "medium", ping: 400 },
+    { id: 3, server: "mtpro.co.uk", port: "443", secret: "ee0000000000000000000000000000000000", country: "United Kingdom", status: "bad", ping: 800 },
+  ];
 
-    const elements = {
-        refreshBtn: document.getElementById('refreshBtn'),
-        testAllBtn: document.getElementById('testAllBtn'),
-        proxyCount: document.getElementById('proxyCount'),
-        activeCount: document.getElementById('activeCount'),
-        mediumCount: document.getElementById('mediumCount'),
-        badCount: document.getElementById('badCount'),
-        proxyList: document.getElementById('proxyList'),
-        loadMoreBtn: document.getElementById('loadMoreBtn'),
-        filterCountry: document.getElementById('filterCountry'),
-        searchInput: document.getElementById('searchInput'),
-        darkModeToggle: document.getElementById('darkModeToggle'),
-        toastContainer: document.getElementById('toastContainer')
-    };
+  function getStatusDotClass(status) {
+    switch(status) {
+      case 'good': return 'dot-good';
+      case 'medium': return 'dot-medium';
+      case 'bad': return 'dot-bad';
+      default: return 'dot-unknown';
+    }
+  }
 
-    // وضعیت پراکسی
-    const getStatusInfo = (status) => {
-        switch(status) {
-            case 'good': return { text: 'عالی', className: 'status-good', icon: 'fa-solid fa-circle-check' };
-            case 'medium': return { text: 'متوسط', className: 'status-medium', icon: 'fa-solid fa-triangle-exclamation' };
-            case 'bad': return { text: 'ضعیف', className: 'status-bad', icon: 'fa-solid fa-circle-xmark' };
-            default: return { text: 'نامشخص', className: 'status-unknown', icon: 'fa-solid fa-circle-question' };
-        }
-    };
+  function renderProxies() {
+    const container = document.getElementById('proxyList');
+    container.innerHTML = '';
+    proxies.forEach(proxy => {
+      const proxyHTML = `
+        <div class="proxy-card">
+          <div>
+            <span class="status-dot ${getStatusDotClass(proxy.status)}" title="${proxy.status}"></span>
+            <span class="english-text" style="font-weight:600; font-size:1.25rem;">${proxy.server}</span>
+          </div>
+          <div class="country-flag">
+            <span class="flag-emoji">${getCountryName(proxy.country).slice(0, 2)}</span>
+            ${getCountryName(proxy.country).slice(3)}
+          </div>
+          <div>Port: <span class="english-text">${proxy.port}</span></div>
+          <div>Ping: <span>${proxy.ping} ms</span></div>
+          <div class="secret-key english-text">${proxy.secret}</div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', proxyHTML);
+    });
+  }
 
-    // ایجاد کارت پراکسی
-    const createProxyCard = (proxy) => {
-        const statusInfo = getStatusInfo(proxy.status);
-        return `
-        <div class="proxy-card" id="proxy-${proxy.id}">
-            <div class="proxy-header">
-                <div class="proxy-server">
-                    <i class="fa-solid fa-server"></i> ${proxy.server}
-                </div>
-                <div class="status-badge ${statusInfo.className}">
-                    <i class="${statusInfo.icon}"></i> ${statusInfo.text}
-                </div>
-            </div>
-            <div class="proxy-info">
-                <div><i class="fa-solid fa-location-dot"></i> ${proxy.country}</div>
-                <div><i class="fa-solid fa-ethernet"></i> پورت: ${proxy.port}</div>
-                <div><i class="fa-solid fa-key"></i> کلید: <span class="secret-text">${proxy.secret}</span></div>
-            </div>
-            <div class="proxy-actions">
-                <button class="ping-btn" data-id="${proxy.id}" title="تست"><i class="fa-solid fa-bolt"></i></button>
-                <button class="copy-btn" data-id="${proxy.id}" title="کپی"><i class="fa-solid fa-copy"></i></button>
-                <button class="connect-btn" data-id="${proxy.id}" title="اتصال"><i class="fa-solid fa-paper-plane"></i></button>
-            </div>
-        </div>`;
-    };
-
-    // نمایش پراکسی‌ها بر اساس فیلتر و جستجو
-    const renderProxies = () => {
-        const filtered = allProxies.filter(p => {
-            const matchesCountry = currentFilterCountry ? p.country.includes(currentFilterCountry) : true;
-            const matchesSearch = searchTerm ? (p.server.includes(searchTerm) || p.country.includes(searchTerm)) : true;
-            return matchesCountry && matchesSearch;
-        });
-        visibleProxies = filtered.slice(0, perPage);
-        elements.proxyList.innerHTML = visibleProxies.map(createProxyCard).join('');
-        elements.loadMoreBtn.style.display = filtered.length > perPage ? 'inline-block' : 'none';
-        updateCounts(filtered);
-        attachEventListeners();
-    };
-
-    // به‌روزرسانی تعداد پراکسی‌ها
-    const updateCounts = (list = allProxies) => {
-        elements.proxyCount.textContent = list.length;
-        elements.activeCount.textContent = list.filter(p => p.status === 'good').length;
-        elements.mediumCount.textContent = list.filter(p => p.status === 'medium').length;
-        elements.badCount.textContent = list.filter(p => p.status === 'bad').length;
-    };
-
-    // بارگذاری پراکسی‌ها از منبع
-    const loadProxies = async () => {
-        elements.refreshBtn.disabled = true;
-        elements.refreshBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> در حال بارگذاری...`;
-        try {
-            const res = await fetch("https://raw.githubusercontent.com/hookzof/socks5_list/master/tg/mtproto.json");
-            if(!res.ok) throw new Error("خطا در دریافت داده‌ها");
-            const data = await res.json();
-            allProxies = (Array.isArray(data) ? data : data.proxies || []).map((p, i) => ({
-                id: i,
-                server: p.server || p.host,
-                port: p.port,
-                secret: p.secret,
-                country: getCountryName(p.country),
-                status: 'unknown
+  renderProxies();
+</script>
+</body>
+</html>
