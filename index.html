@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8" />
+<title>لیست پراکسی تلگرام</title>
+<style>
+  body { font-family: Tahoma, sans-serif; background: #f9f9f9; padding: 20px; }
+  #proxy-list { margin-top: 20px; }
+  .proxy-item { background: #fff; padding: 10px; margin-bottom: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+  button { margin-left: 8px; padding: 5px 12px; cursor: pointer; border: none; border-radius: 4px; }
+  .copy-btn { background: #3498db; color: white; }
+  .test-btn { background: #888; color: white; cursor: not-allowed; }
+  .status { font-weight: bold; margin-left: 10px; min-width: 60px; text-align: center; }
+</style>
+</head>
+<body>
+<h1>لیست پراکسی‌های تلگرام</h1>
+<button id="update-btn">آپدیت لیست</button>
+<div id="proxy-list">در حال بارگذاری...</div>
+
+<script>
+  const proxyListEl = document.getElementById('proxy-list');
+  const updateBtn = document.getElementById('update-btn');
+
+  // آدرس فایل متنی یا JSON پراکسی‌ها روی یه هاست یا gist (مثلا یه فایل txt ساده)
+  const proxySourceURL = 'https://raw.githubusercontent.com/username/repo/main/proxies.txt';
+
+  async function fetchProxies() {
+    proxyListEl.textContent = 'در حال بارگذاری...';
+    try {
+      const res = await fetch(proxySourceURL);
+      if (!res.ok) throw new Error('خطا در دریافت لیست');
+      const text = await res.text();
+      const proxies = text.split('\n').filter(line => line.trim() !== '');
+      renderProxies(proxies);
+    } catch (e) {
+      proxyListEl.textContent = 'خطا در بارگذاری پراکسی‌ها: ' + e.message;
+    }
+  }
+
+  function renderProxies(proxies) {
+    proxyListEl.innerHTML = '';
+    proxies.forEach(proxy => {
+      const div = document.createElement('div');
+      div.className = 'proxy-item';
+
+      const span = document.createElement('span');
+      span.textContent = proxy;
+
+      const copyBtn = document.createElement('button');
+      copyBtn.textContent = 'کپی';
+      copyBtn.className = 'copy-btn';
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(proxy).then(() => alert('کپی شد: ' + proxy));
+      };
+
+      // چون سرور تست نداریم، دکمه تست غیرفعاله
+      const testBtn = document.createElement('button');
+      testBtn.textContent = 'تست (غیرفعال)';
+      testBtn.className = 'test-btn';
+      testBtn.disabled = true;
+
+      div.appendChild(span);
+      div.appendChild(copyBtn);
+      div.appendChild(testBtn);
+
+      proxyListEl.appendChild(div);
+    });
+  }
+
+  updateBtn.onclick = fetchProxies;
+
+  // بارگذاری اولیه
+  fetchProxies();
+</script>
+</body>
+</html>
