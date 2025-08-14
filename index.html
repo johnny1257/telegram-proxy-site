@@ -7,17 +7,26 @@
 <style>
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css');
 body{margin:0;font-family:'Vazir',sans-serif;background:#0e1117;color:#e6edf3}
-header{position:sticky;top:0;background:#161b22;padding:12px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center}
+header{position:sticky;top:0;background:#161b22;padding:12px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;z-index:30}
 .title-container{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;max-width:600px;}
-.title{font-family:'Vazir Black',sans-serif;font-size:52px;background:linear-gradient(135deg,#ff0057,#ffdd00,#00fff0,#ff0057);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:4px 4px 14px rgba(0,0,0,0.85),6px 6px 20px rgba(0,0,0,0.65);font-weight:900;letter-spacing:3px;text-align:center}
+.title{font-family:'Vazir Black',sans-serif;font-size:52px;background:linear-gradient(135deg,#ff0057,#ffdd00,#00fff0,#ff0057);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:4px 4px 14px rgba(0,0,0,0.85),6px 6px 20px rgba(0,0,0,0.65);font-weight:900;letter-spacing:3px;text-align:center; animation: wobble 1.5s infinite;}
+@keyframes wobble {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(3deg); }
+  50% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+  100% { transform: rotate(0deg); }
+}
 .search-container{display:flex;gap:6px;width:100%}
 input,button{padding:8px 12px;border-radius:10px;border:none;font-size:14px;font-family:'Vazir',sans-serif}
 input{flex:1}
 button{background:#2f81f7;color:#fff;cursor:pointer;transition:0.3s}
 button:hover{background:#3b93f9}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;padding:12px;width:100%;max-width:1200px;margin:auto}
-.card{background:#0d1117;border:1px solid #30363d;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px}
-.actions button{margin:2px 0;width:100%;border-radius:6px;cursor:pointer;transition:0.3s;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;padding:12px;width:100%;max-width:1200px;margin:auto;position:relative;z-index:10;overflow:visible;}
+.card{border-radius:20px;padding:0;display:flex;flex-direction:column;gap:0;position:relative;}
+.card-inner{background:linear-gradient(145deg,#1a1d27,#0d1117);border:2px solid #30363d;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:16px 16px 70px rgba(0,0,0,1);transition:transform 0.3s, box-shadow 0.3s;position:relative;z-index:1}
+.card-inner:hover{transform: translateY(-20px) scale(1.2);box-shadow:24px 24px 100px rgba(0,0,0,1);z-index:9999}
+.actions button{margin:2px 0;width:100%;border-radius:12px;cursor:pointer;transition:0.3s;font-weight:bold}
 .actions button.open{background:#4caf50;color:#fff}
 .actions button.copy{background:#ff9800;color:#fff}
 .actions button.qr{background:#2196f3;color:#fff}
@@ -41,7 +50,7 @@ button:hover{background:#3b93f9}
 <main>
 <div class="grid" id="grid"></div>
 </main>
-<dialog id="qrModal" style="border-radius:16px;background:#0d1117;color:#e6edf3;padding:12px;">
+<dialog id="qrModal" style="border-radius:16px;background:#0d1117;color:#e6edf3;padding:12px;z-index:60;position:relative;">
   <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
     <img id="qrImg" style="width:240px;height:240px;border-radius:12px;border:1px solid #30363d;background:#0b0f14">
     <div id="qrText" style="word-break:break-all;font-size:12px;color:#9aa6b2"></div>
@@ -79,8 +88,10 @@ function toLinkMTProto({host,port,secret}){
 }
 
 function cardEl(proxy,type){
+  const wrapper=document.createElement('div');
+  wrapper.className='card';
   const el=document.createElement('div');
-  el.className='card';
+  el.className='card-inner';
   let content='';
   const pingCls=pingClass(proxy.ping);
   if(type==='mtproto'){
@@ -98,6 +109,16 @@ function cardEl(proxy,type){
 <button class='copy' data-act="copy" data-url="${proxy.ip}:${proxy.port}">کپی IP:PORT</button>
 </div>`;
   }
+
+  wrapper.appendChild(el);
+  wrapper.addEventListener('mouseenter',()=>{
+    el.style.transform='translateY(-20px) scale(1.2)';
+    el.style.zIndex='9999';
+  });
+  wrapper.addEventListener('mouseleave',()=>{
+    el.style.transform='';
+    el.style.zIndex='1';
+  });
   el.addEventListener('click',ev=>{
     const b=ev.target.closest('button');
     if(!b) return;
@@ -107,7 +128,7 @@ function cardEl(proxy,type){
     else if(act==='copy'){navigator.clipboard.writeText(url).then(()=>{b.textContent='کپی شد ✓';setTimeout(()=>b.textContent=act==='copy'?'کپی لینک':'کپی tg://',1200);});}
     else if(act==='qr'){qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(url)}`;qrText.textContent=url;qrCopy.onclick=()=>navigator.clipboard.writeText(url);qrModal.showModal();}
   });
-  return el;
+  return wrapper;
 }
 
 function renderProxies(){
