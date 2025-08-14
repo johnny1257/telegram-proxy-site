@@ -1,403 +1,140 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>سایت پراکسی تلگرام</title>
-
-<!-- فونت‌های فارسی و انگلیسی -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>داشبورد پروکسی تلگرام — MTProto & SOCKS5</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css');
+body{margin:0;font-family:'Vazir',sans-serif;background:#0e1117;color:#e6edf3}
+header{position:sticky;top:0;background:#161b22;padding:12px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center}
+.title-container{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;max-width:600px;}
+.title{font-family:'Vazir Black',sans-serif;font-size:52px;background:linear-gradient(135deg,#ff0057,#ffdd00,#00fff0,#ff0057);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:4px 4px 14px rgba(0,0,0,0.85),6px 6px 20px rgba(0,0,0,0.65);font-weight:900;letter-spacing:3px;text-align:center}
+.search-container{display:flex;gap:6px;width:100%}
+input,button{padding:8px 12px;border-radius:10px;border:none;font-size:14px;font-family:'Vazir',sans-serif}
+input{flex:1}
+button{background:#2f81f7;color:#fff;cursor:pointer;transition:0.3s}
+button:hover{background:#3b93f9}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;padding:12px;width:100%;max-width:1200px;margin:auto}
+.card{background:#0d1117;border:1px solid #30363d;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.actions button{margin:2px 0;width:100%;border-radius:6px;cursor:pointer;transition:0.3s;font-weight:bold}
+.actions button.open{background:#4caf50;color:#fff}
+.actions button.copy{background:#ff9800;color:#fff}
+.actions button.qr{background:#2196f3;color:#fff}
+.kbd{font-family:monospace;background:#11151b;border:1px solid #30363d;border-radius:6px;padding:2px 4px;color:#9fb5d1}
+.flag{width:24px;height:16px;vertical-align:middle;margin-left:4px;border:1px solid #30363d;}
+.ping-green{color:#4caf50;font-weight:bold}
+.ping-yellow{color:#ffeb3b;font-weight:bold}
+.ping-red{color:#f44336;font-weight:bold}
 </style>
-
-<style>
-  body {
-    margin: 0; padding: 0;
-    font-family: 'Vazirmatn', Tahoma, sans-serif;
-    background: #121212;
-    color: #e0e0e0;
-    min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center;
-    padding: 20px;
-  }
-  h1 {
-    margin-bottom: 20px;
-  }
-  button {
-    cursor: pointer;
-    background-color: #0088cc;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    color: #fff;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-  }
-  button:hover:not(:disabled) {
-    background-color: #00aaff;
-  }
-  button:disabled {
-    background-color: #555;
-    cursor: not-allowed;
-  }
-  .proxy-card {
-    background: #222;
-    margin-bottom: 15px;
-    padding: 15px 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .proxy-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .proxy-server {
-    font-weight: 700;
-    font-size: 1.2rem;
-    font-family: 'Roboto', sans-serif;
-    direction: ltr;
-    user-select: text;
-  }
-  .status-badge {
-    font-size: 0.9rem;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .status-good {
-    background-color: #4caf50;
-    color: #fff;
-  }
-  .status-medium {
-    background-color: #ff9800;
-    color: #fff;
-  }
-  .status-bad {
-    background-color: #f44336;
-    color: #fff;
-  }
-  .status-unknown {
-    background-color: #607d8b;
-    color: #fff;
-  }
-  .proxy-info {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    font-size: 0.9rem;
-    color: #bbb;
-  }
-  .proxy-info div {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .country-flag {
-    width: 24px;
-    height: 18px;
-    border-radius: 4px;
-    object-fit: cover;
-    box-shadow: 0 0 3px #000a;
-  }
-  .proxy-secret {
-    font-family: 'Roboto Mono', monospace;
-    background: #1e1e1e;
-    padding: 8px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    user-select: all;
-    word-break: break-all;
-    color: #ccc;
-  }
-  .btn-group {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 10px;
-  }
-  .btn-group button {
-    flex: 1;
-    font-size: 0.9rem;
-    padding: 8px 0;
-  }
-  #proxyCount, #activeCount {
-    font-weight: 700;
-    color: #00c8ff;
-  }
-  #headerInfo {
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-  }
-  .toast {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #333;
-    padding: 14px 22px;
-    border-radius: 8px;
-    color: #fff;
-    font-weight: 600;
-    box-shadow: 0 0 10px #000a;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 9999;
-  }
-  .toast.show {
-    opacity: 1;
-    pointer-events: auto;
-  }
-</style>
-
 </head>
 <body>
-
-<h1>لیست پراکسی‌های تلگرام</h1>
-<div id="headerInfo">
-    تعداد کل پراکسی‌ها: <span id="proxyCount">0</span> | پراکسی‌های فعال: <span id="activeCount">0</span>
+<header>
+<div class="title-container">
+<div class="title">پرشین رایانه</div>
+<div class="search-container">
+<input type="text" id="filterInput" placeholder="جستجو بر اساس کشور یا provider">
+<button id="btnClear">پاک کردن</button>
 </div>
-
-<div>
-  <button id="refreshBtn">بروزرسانی لیست</button>
-  <button id="testAllBtn">تست همه</button>
 </div>
-
-<div id="proxyList" style="margin-top:20px; width: 100%; max-width: 600px;"></div>
-
-<div class="btn-group" style="max-width: 600px; width: 100%; margin-top: 10px;">
-  <button id="loadMoreBtn" style="width: 100%;">نمایش بیشتر</button>
-</div>
-
-<div id="toast" class="toast"></div>
-
+</header>
+<main>
+<div class="grid" id="grid"></div>
+</main>
+<dialog id="qrModal" style="border-radius:16px;background:#0d1117;color:#e6edf3;padding:12px;">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+    <img id="qrImg" style="width:240px;height:240px;border-radius:12px;border:1px solid #30363d;background:#0b0f14">
+    <div id="qrText" style="word-break:break-all;font-size:12px;color:#9aa6b2"></div>
+    <div style="display:flex;gap:6px;"><button id="qrCopy">کپی لینک</button><button id="qrClose">بستن</button></div>
+  </div>
+</dialog>
 <script>
-// لینک فایل پراکسی با فرمت json (بروزرسانی آن لازم است)
-const proxySourceURL = "https://raw.githubusercontent.com/hookzof/socks5_list/master/tg/mtproto.json";
+const grid=document.getElementById('grid');
+const filterInput=document.getElementById('filterInput');
+const btnClear=document.getElementById('btnClear');
+const qrModal=document.getElementById('qrModal');
+const qrImg=document.getElementById('qrImg');
+const qrText=document.getElementById('qrText');
+const qrCopy=document.getElementById('qrCopy');
+const qrClose=document.getElementById('qrClose');
 
-let allProxies = [];
-let visibleProxies = [];
-const perPage = 9;
+let proxies=[];
+const apiUrl='https://raw.githubusercontent.com/hookzof/socks5_list/master/tg/mtproto.json';
+const proxyType='mtproto';
 
-const elements = {
-  refreshBtn: document.getElementById("refreshBtn"),
-  testAllBtn: document.getElementById("testAllBtn"),
-  proxyCount: document.getElementById("proxyCount"),
-  activeCount: document.getElementById("activeCount"),
-  proxyList: document.getElementById("proxyList"),
-  loadMoreBtn: document.getElementById("loadMoreBtn"),
-  toast: document.getElementById("toast"),
-};
-
-const countryFlags = {
-  "Russia": "https://flagcdn.com/w40/ru.png",
-  "Netherlands": "https://flagcdn.com/w40/nl.png",
-  "United States": "https://flagcdn.com/w40/us.png",
-  "Germany": "https://flagcdn.com/w40/de.png",
-  "France": "https://flagcdn.com/w40/fr.png",
-  "United Kingdom": "https://flagcdn.com/w40/gb.png",
-  "Canada": "https://flagcdn.com/w40/ca.png",
-  "Italy": "https://flagcdn.com/w40/it.png",
-  "Spain": "https://flagcdn.com/w40/es.png",
-  "Turkey": "https://flagcdn.com/w40/tr.png",
-  "Finland": "https://flagcdn.com/w40/fi.png",
-  "Sweden": "https://flagcdn.com/w40/se.png",
-  "Poland": "https://flagcdn.com/w40/pl.png",
-  "Iran": "https://flagcdn.com/w40/ir.png"
-};
-
-const getCountryFlag = (country) => {
-  return countryFlags[country] || "https://flagcdn.com/w40/un.png";
-};
-
-const getCountryName = (country) => {
-  const translations = {
-    "Russia": "روسیه",
-    "Netherlands": "هلند",
-    "United States": "آمریکا",
-    "Germany": "آلمان",
-    "France": "فرانسه",
-    "United Kingdom": "انگلستان",
-    "Canada": "کانادا",
-    "Italy": "ایتالیا",
-    "Spain": "اسپانیا",
-    "Turkey": "ترکیه",
-    "Finland": "فنلاند",
-    "Sweden": "سوئد",
-    "Poland": "لهستان",
-    "Iran": "ایران",
-  };
-  return translations[country] || country || "نامشخص";
-};
-
-function showToast(message, duration = 3000) {
-  const toast = elements.toast;
-  toast.textContent = message;
-  toast.classList.add("show");
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, duration);
+function flagEmoji(country){
+  if(!country) return '';
+  return `<img class='flag' src='https://flagcdn.com/w20/${country.toLowerCase()}.png'>`;
 }
 
-function createProxyCard(proxy) {
-  const card = document.createElement("div");
-  card.className = "proxy-card";
-
-  const flagSrc = getCountryFlag(proxy.country);
-  const countryName = getCountryName(proxy.country);
-
-  card.innerHTML = `
-    <div class="proxy-header">
-      <div class="proxy-server">${proxy.server}</div>
-      <div class="status-badge status-unknown" id="status-${proxy.id}">نامشخص</div>
-    </div>
-    <div class="proxy-info">
-      <div><img class="country-flag" src="${flagSrc}" alt="${countryName}" title="${countryName}" /> ${countryName}</div>
-      <div>پورت: ${proxy.port}</div>
-      <div id="ping-${proxy.id}">تست نشده</div>
-    </div>
-    <div class="proxy-secret" title="کلید امنیتی">${proxy.secret}</div>
-    <div class="btn-group">
-      <button onclick="testPing(${proxy.id})">تست</button>
-      <button onclick="copyProxy(${proxy.id})">کپی</button>
-      <button onclick="connectTelegram(${proxy.id})">اتصال</button>
-    </div>
-  `;
-  return card;
+function pingClass(ping){
+  if(ping<300) return 'ping-green';
+  if(ping<=700) return 'ping-yellow';
+  return 'ping-red';
 }
 
-function renderProxies() {
-  elements.proxyList.innerHTML = "";
-  visibleProxies.forEach(proxy => {
-    elements.proxyList.appendChild(createProxyCard(proxy));
-  });
+function toLinkMTProto({host,port,secret}){
+  const sec=encodeURIComponent(secret.replace(/^0x/i,''));
+  return `tg://proxy?server=${encodeURIComponent(host)}&port=${encodeURIComponent(port)}&secret=${sec}`;
 }
 
-async function loadProxies() {
-  try {
-    const res = await fetch(proxySourceURL);
-    if (!res.ok) throw new Error("خطا در دریافت لیست پراکسی‌ها");
-    const data = await res.json();
-
-    allProxies = (Array.isArray(data) ? data : data.proxies || []).map((p, i) => ({
-      id: i,
-      server: p.server || p.host,
-      port: p.port,
-      secret: p.secret,
-      country: p.country || "نامشخص",
-      status: "unknown",
-      ping: null,
-    }));
-    visibleProxies = allProxies.slice(0, perPage);
-    renderProxies();
-    updateCounts();
-    showToast("✅ لیست پراکسی‌ها به‌روزرسانی شد.");
-  } catch {
-    showToast("❌ خطا در بارگذاری پراکسی‌ها، استفاده از لیست پیش‌فرض");
-    // لیست پیشفرض ساده
-    allProxies = [
-      { id: 0, server: "149.154.175.50", port: "443", secret: "abcd1234", country: "Russia", status: "unknown", ping: null },
-      { id: 1, server: "149.154.167.40", port: "443", secret: "efgh5678", country: "United States", status: "unknown", ping: null },
-    ];
-    visibleProxies = allProxies.slice(0, perPage);
-    renderProxies();
-    updateCounts();
-  }
-}
-
-function updateCounts() {
-  elements.proxyCount.textContent = allProxies.length;
-  elements.activeCount.textContent = allProxies.filter(p => p.status === "good").length;
-}
-
-async function testPing(id) {
-  const proxy = allProxies.find(p => p.id === id);
-  if (!proxy) return;
-
-  const pingElem = document.getElementById(`ping-${id}`);
-  const statusElem = document.getElementById(`status-${id}`);
-
-  pingElem.textContent = "در حال تست...";
-  statusElem.textContent = "در حال تست...";
-  statusElem.className = "status-badge status-unknown";
-
-  // شبیه‌سازی تست پینگ
-  const pingTime = Math.floor(Math.random() * 600) + 50;
-  await new Promise(r => setTimeout(r, pingTime));
-
-  proxy.ping = pingTime;
-  if (pingTime < 250) {
-    proxy.status = "good";
-    statusElem.className = "status-badge status-good";
-    statusElem.textContent = "عالی";
-    pingElem.textContent = pingTime + " ms";
-    pingElem.style.color = "#4caf50";
-  } else if (pingTime < 500) {
-    proxy.status = "medium";
-    statusElem.className = "status-badge status-medium";
-    statusElem.textContent = "متوسط";
-    pingElem.textContent = pingTime + " ms";
-    pingElem.style.color = "#ff9800";
+function cardEl(proxy,type){
+  const el=document.createElement('div');
+  el.className='card';
+  let content='';
+  const pingCls=pingClass(proxy.ping);
+  if(type==='mtproto'){
+    const link=toLinkMTProto(proxy);
+    content=`<div>سرور: <span class='kbd'>${proxy.host}</span></div><div>پورت: <span class='kbd'>${proxy.port}</span></div><div>سیکرت: <span class='kbd'>${String(proxy.secret).slice(0,6)}…${String(proxy.secret).slice(-4)}</span></div>
+<div>کشور: ${proxy.country||''} ${flagEmoji(proxy.country)}</div><div>Provider: ${proxy.provider||''}</div><div>Uptime: ${proxy.uptime||''}%</div><div>AddTime: ${proxy.addTime||''}</div><div>Ping: <span class='${pingCls}'>${proxy.ping||''}ms</span></div>`;
+    el.innerHTML=`${content}<div class="actions">
+<button class='open' data-act="open" data-url="${link}">باز کردن در تلگرام</button>
+<button class='copy' data-act="copy" data-url="${link}">کپی لینک</button>
+<button class='qr' data-act="qr" data-url="${link}">نمایش QR</button>
+</div>`;
   } else {
-    proxy.status = "bad";
-    statusElem.className = "status-badge status-bad";
-    statusElem.textContent = "ضعیف";
-    pingElem.textContent = pingTime + " ms";
-    pingElem.style.color = "#f44336";
+    content=`<div>IP: <span class='kbd'>${proxy.ip}</span></div><div>پورت: <span class='kbd'>${proxy.port}</span></div><div>کشور: ${proxy.country||''} ${flagEmoji(proxy.country)}</div><div>Provider: ${proxy.provider||''}</div><div>AddTime: ${proxy.addTime||''}</div><div>Ping: <span class='${pingCls}'>${proxy.ping||''}ms</span></div>`;
+    el.innerHTML=`${content}<div class="actions">
+<button class='copy' data-act="copy" data-url="${proxy.ip}:${proxy.port}">کپی IP:PORT</button>
+</div>`;
   }
-  updateCounts();
+  el.addEventListener('click',ev=>{
+    const b=ev.target.closest('button');
+    if(!b) return;
+    const act=b.getAttribute('data-act');
+    const url=b.getAttribute('data-url');
+    if(act==='open'){window.location.href=url;}
+    else if(act==='copy'){navigator.clipboard.writeText(url).then(()=>{b.textContent='کپی شد ✓';setTimeout(()=>b.textContent=act==='copy'?'کپی لینک':'کپی tg://',1200);});}
+    else if(act==='qr'){qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(url)}`;qrText.textContent=url;qrCopy.onclick=()=>navigator.clipboard.writeText(url);qrModal.showModal();}
+  });
+  return el;
 }
 
-function copyProxy(id) {
-  const proxy = allProxies.find(p => p.id === id);
-  if (!proxy) return;
-  const proxyURL = `tg://proxy?server=${proxy.server}&port=${proxy.port}&secret=${proxy.secret}`;
-  navigator.clipboard.writeText(proxyURL).then(() => {
-    showToast("✅ لینک پروکسی کپی شد.");
-  }).catch(() => {
-    showToast("❌ خطا در کپی کردن لینک.");
+function renderProxies(){
+  grid.innerHTML='';
+  const filter=filterInput.value.toLowerCase();
+  proxies.filter(p=>!filter||(p.country&&p.country.toLowerCase().includes(filter))||(p.provider&&p.provider.toLowerCase().includes(filter))).forEach(p=>{
+    if(proxyType==='mtproto'&&p.host&&p.port&&p.secret){grid.appendChild(cardEl(p,'mtproto'))}
+    else if(proxyType==='socks'&&p.ip&&p.port){grid.appendChild(cardEl(p,'socks'))}
   });
 }
 
-function connectTelegram(id) {
-  const proxy = allProxies.find(p => p.id === id);
-  if (!proxy) return;
-  const proxyURL = `tg://proxy?server=${proxy.server}&port=${proxy.port}&secret=${proxy.secret}`;
-  window.location.href = proxyURL;
-  showToast("🚀 در حال تلاش برای اتصال به تلگرام...");
+async function fetchList(){
+  grid.innerHTML='در حال دریافت...';
+  try{
+    const res=await fetch(`${apiUrl}?type=${proxyType}`);
+    if(!res.ok) throw new Error(res.status);
+    const data=await res.json();
+    proxies=Array.isArray(data)?data:[data];
+    renderProxies();
+  }catch(e){grid.innerHTML='خطا در دریافت اطلاعات';console.error(e);}
 }
 
-elements.refreshBtn.addEventListener("click", loadProxies);
+btnClear.addEventListener('click',()=>{grid.innerHTML='';proxies=[]});
+filterInput.addEventListener('input',renderProxies);
+qrClose.addEventListener('click',()=>qrModal.close());
 
-elements.testAllBtn.addEventListener("click", async () => {
-  for (const proxy of visibleProxies) {
-    await testPing(proxy.id);
-  }
-  showToast("✅ تست همه پراکسی‌ها به پایان رسید.");
-});
-
-elements.loadMoreBtn.addEventListener("click", () => {
-  const currentCount = visibleProxies.length;
-  const next = allProxies.slice(currentCount, currentCount + perPage);
-  if (next.length === 0) {
-    showToast("📌 پراکسی جدیدی برای نمایش نیست.");
-    return;
-  }
-  visibleProxies = visibleProxies.concat(next);
-  renderProxies();
-});
-
-window.addEventListener("load", () => {
-  loadProxies();
-});
+fetchList();
 </script>
-
 </body>
 </html>
